@@ -9,18 +9,22 @@
     </head>
 
     <body>
+        <!-- Jumbotron -->
         <div class="jumbotron jumbotron-fluid text-center bg-primary text-light">
             <h1 style="font-size: 4rem">Image Classifier - VGG16</h1>
         </div>
         
+        <!-- Header message -->
         <div class="text-center mb-4">
             <h2>Upload an image to get a classification description and prediction score.</h2>
         </div>
 
+        <!-- Image preview container -->
         <div class="container d-flex justify-content-center">
             <img id="previewImage" width="30%" height="40%" style="max-width: 500px; max-height: 500px;" />
         </div>
         
+        <!-- Form -->
         <div class="container d-flex justify-content-center" style="font-size: 1.4rem;">
             <form class="form">
                 <div class="mb-3 mt-3">
@@ -30,6 +34,7 @@
             </form>
         </div>
 
+        <!-- Result display elements -->
         <div id="resultBlock" class="container d-flex  justify-content-center mt-5" style="font-size: 1.4rem;">
             <div class="text-center" >
                 <span id="statusDisplay"></span>
@@ -40,7 +45,6 @@
             </div>
         </div>
 
-    
         <script>
             const form = document.querySelector('.form');
             const fileInput = document.querySelector('#fileInput');
