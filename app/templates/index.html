@@ -1,97 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Classifier</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Image Classifier</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
 
-<body>
-    <div class="jumbotron jumbotron-fluid text-center bg-primary text-light">
-        <h1 style="font-size: 4rem">Image Classifier</h1>
-    </div>
-    
-    <div class="text-center mb-4">
-        <h2>Upload an image to get a classification description and prediction score.</h2>
-    </div>
-
-    <div class="container d-flex justify-content-center">
-        <img id="previewImage" width="30%" height="40%" style="max-width: 500px; max-height: 500px;" />
-    </div>
-    
-    <div class="container d-flex justify-content-center" style="font-size: 1.4rem;">
-        <form class="form">
-            
-            <div class="mb-3 mt-3">
-                <input type="file" id="fileInput" name="file" accept="image/png, image/jpeg" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-        </form>
-    </div>
-
-    <div id="resultBlock" class="container d-flex  justify-content-center mt-5" style="font-size: 1.4rem;">
-        <div class="text-center" >
-            <span id="statusDisplay"></span>
-            <br>
-            <span id="className"></span>
-            <br>
-            <span id="classScore"></span>
+    <body>
+        <div class="jumbotron jumbotron-fluid text-center bg-primary text-light">
+            <h1 style="font-size: 4rem">Image Classifier - VGG16</h1>
         </div>
-    </div>
-
-   
-    <script>
-        const form = document.querySelector('.form');
-        const fileInput = document.getElementById('fileInput');
-        const className = document.querySelector("span#className")
-        const endpoint = 'upload';
-        const previewImage = document.getElementById('previewImage');
-        function loadFile (event) {
-            previewImage.src = URL.createObjectURL(event.target.files[0]);
-            previewImage.onload = function() {
-            URL.revokeObjectURL(previewImage.src) // free memory
-            }
-        };
-
-        fileInput.addEventListener('change', event => {
-            loadFile(event)
-        });
         
-        form.addEventListener('submit', event => {
-            event.preventDefault();
-            const file = fileInput.files[0];
-            const formData = new FormData();
-            formData.append('file', file);
-            statusDisplay.innerHTML = '<strong>Processing...</strong>'
-            
-            fetch(endpoint, {
-                'method': 'POST',
-                'body': formData
-            })
-            .then(response => response.json()) // .json() returns another promise so we sue another .then
-            .then(data => {
-                console.log(data);
-                statusDisplay.innerHTML = '<strong>Prediction</strong>'
-                className.innerHTML = "<strong>Class Name: </strong>".concat(data['message']['class_name'])
-                classScore.innerHTML = "<strong>Class Score: </strong>".concat(data['message']['class_score'])
-            })
-            .catch(error => {
-                statusDisplay.innerHTML = '<strong>Error...</strong>'
-                console.log(error);
-                alert('Error uploading file');
+        <div class="text-center mb-4">
+            <h2>Upload an image to get a classification description and prediction score.</h2>
+        </div>
+
+        <div class="container d-flex justify-content-center">
+            <img id="previewImage" width="30%" height="40%" style="max-width: 500px; max-height: 500px;" />
+        </div>
+        
+        <div class="container d-flex justify-content-center" style="font-size: 1.4rem;">
+            <form class="form">
+                <div class="mb-3 mt-3">
+                    <input type="file" id="fileInput" name="file" accept="image/png, image/jpeg" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+            </form>
+        </div>
+
+        <div id="resultBlock" class="container d-flex  justify-content-center mt-5" style="font-size: 1.4rem;">
+            <div class="text-center" >
+                <span id="statusDisplay"></span>
+                <br>
+                <span id="className"></span>
+                <br>
+                <span id="classScore"></span>
+            </div>
+        </div>
+
+    
+        <script>
+            const form = document.querySelector('.form');
+            const fileInput = document.querySelector('#fileInput');
+            const className = document.querySelector("span#className")
+            const endpoint = 'upload';
+            const previewImage = document.querySelector('#previewImage');
+
+            // show preview of uploaded image on file select
+            function loadFile (event) {
+                previewImage.src = URL.createObjectURL(event.target.files[0]);
+                previewImage.onload = function() {
+                URL.revokeObjectURL(previewImage.src) // free memory
+                }
+            };
+
+            // register iamge previewing function
+            fileInput.addEventListener('change', event => {
+                loadFile(event)
             });
-            form.reset();
-        });
-    </script>
+            
+            // form submit action
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                statusDisplay.innerHTML = '<strong>Processing...</strong>'
+                
+                fetch(endpoint, {
+                    'method': 'POST',
+                    'body': formData
+                })
+                .then(response => response.json()) // .json() returns another promise so we sue another .then
+                .then(data => {
+                    statusDisplay.innerHTML = '<strong>Prediction</strong>'
+                    className.innerHTML = "<strong>Class Name: </strong>".concat(data['message']['class_name'])
+                    classScore.innerHTML = "<strong>Class Score: </strong>".concat(data['message']['class_score'])
+                })
+                .catch(error => {
+                    statusDisplay.innerHTML = '<strong>Error...</strong>'
+                    alert('Error uploading file');
+                });
+                form.reset();
+            });
+        </script>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-</body>
-
-
-
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+    </body>
 </html>

@@ -3,7 +3,7 @@ import numpy as np
 import io
 
 def get_model():
-    model_path = './model/my_model'
+    model_path = './models/my_model'
     model = tf.keras.models.load_model(model_path, compile=False)
     return model
 
