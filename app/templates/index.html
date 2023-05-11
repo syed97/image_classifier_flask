@@ -78,7 +78,7 @@
                     'method': 'POST',
                     'body': formData
                 })
-                .then(response => response.json()) // .json() returns another promise so we sue another .then
+                .then(response => response.json())
                 .then(data => {
                     statusDisplay.innerHTML = '<strong>Prediction</strong>';
                     className.innerHTML = "<strong>Class Name: </strong>".concat(data['message']['class_name']);
