@@ -12,4 +12,4 @@ An image classification app that uses VGG16 for predicting classes and scores fo
 ### Launch
 - Run the run.sh script e.g. sudo bash run.sh
 - You should see the app and nginx containers start up
-- Acess the app through your network e.g. http://localhost or http://localhost:8000
+- Acess the app through your network on port 80 or port 8000 e.g. http://localhost or http://localhost:8000
