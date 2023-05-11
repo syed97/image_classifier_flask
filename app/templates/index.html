@@ -48,21 +48,22 @@
         <script>
             const form = document.querySelector('.form');
             const fileInput = document.querySelector('#fileInput');
-            const className = document.querySelector("span#className")
-            const endpoint = 'upload';
             const previewImage = document.querySelector('#previewImage');
+            const className = document.querySelector("#className");
+            const classScore = document.querySelector("#classScore");
+            const endpoint = 'upload';
 
             // show preview of uploaded image on file select
             function loadFile (event) {
                 previewImage.src = URL.createObjectURL(event.target.files[0]);
                 previewImage.onload = function() {
                 URL.revokeObjectURL(previewImage.src) // free memory
-                }
+                };
             };
 
             // register iamge previewing function
             fileInput.addEventListener('change', event => {
-                loadFile(event)
+                loadFile(event);
             });
             
             // form submit action
@@ -71,7 +72,7 @@
                 const file = fileInput.files[0];
                 const formData = new FormData();
                 formData.append('file', file);
-                statusDisplay.innerHTML = '<strong>Processing...</strong>'
+                statusDisplay.innerHTML = '<strong>Processing...</strong>';
                 
                 fetch(endpoint, {
                     'method': 'POST',
@@ -79,12 +80,12 @@
                 })
                 .then(response => response.json()) // .json() returns another promise so we sue another .then
                 .then(data => {
-                    statusDisplay.innerHTML = '<strong>Prediction</strong>'
-                    className.innerHTML = "<strong>Class Name: </strong>".concat(data['message']['class_name'])
-                    classScore.innerHTML = "<strong>Class Score: </strong>".concat(data['message']['class_score'])
+                    statusDisplay.innerHTML = '<strong>Prediction</strong>';
+                    className.innerHTML = "<strong>Class Name: </strong>".concat(data['message']['class_name']);
+                    classScore.innerHTML = "<strong>Class Score: </strong>".concat(data['message']['class_score']);
                 })
                 .catch(error => {
-                    statusDisplay.innerHTML = '<strong>Error...</strong>'
+                    statusDisplay.innerHTML = '<strong>Error...</strong>';
                     alert('Error uploading file');
                 });
                 form.reset();
